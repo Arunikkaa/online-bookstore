@@ -1,0 +1,3980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookswagon - Online Bookstore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+ /* Combined CSS for both implementations */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+    padding:20px;
+}
+
+.main-content {
+    width: 70%;
+    padding: 20px;
+}
+
+.cart-sidebar {
+    width: 30%;
+    background-color: #f5f5f5;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Header Styles */
+header {
+    background-color: #232f3e;
+    color: white;
+    padding: 15px 0;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.search-box {
+    display: flex;
+    flex: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.search-box button {
+    padding: 10px 15px;
+    background-color: #f57224;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.user-actions a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+/* Navigation */
+nav {
+    background-color: #131921;
+    padding: 10px 0;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Book Grid */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.book-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    padding: 20px;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-author {
+    font-weight: 600;
+    color: #232f3e;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.book-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.book-image {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    display: block;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-to-cart {
+    background-color: #f57224;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart:hover {
+    background-color: #e0611a;
+}
+
+/* Price and discount styles */
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.book-price {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.current-price {
+    font-weight: 700;
+    color: #e63946;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+/* Tagline Section */
+.tagline-section {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.tagline {
+    font-size: 1.5rem;
+    color: #232f3e;
+    font-style: italic;
+}
+
+/* Category Links */
+.category-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.category-link {
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.category-link:hover {
+    background-color: #f57224;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Product Detail Page */
+.product-detail {
+    display: flex;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 30px 0;
+}
+
+.product-image {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    margin-right: 30px;
+    border-radius: 4px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.product-author {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.product-price {
+    margin: 20px 0;
+}
+
+.product-description {
+    margin: 20px 0;
+    line-height: 1.7;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.quantity-selector button {
+    width: 30px;
+    height: 30px;
+    background-color: #f0f0f0;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.quantity-selector input {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    margin: 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.buy-now {
+    background-color: #f57224;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* Best Sellers Page */
+.page-title {
+    font-size: 2rem;
+    color: #232f3e;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-right: 20px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.sidebar ul {
+    list-style: none;
+    
+}
+
+.sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.range-input {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.range-values {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bestsellers-container {
+    display: flex;
+    padding: 20px 0;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.results-info {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sort-options select {
+    padding: 8px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.sidebar li:last-child {
+    border-bottom: none;
+}
+
+.sidebar li:hover {
+    color: #3498db;
+    cursor: pointer;
+}
+/* Login Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #f57224;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.or-divider {
+    text-align: center;
+    margin: 15px 0;
+    position: relative;
+}
+
+.or-divider::before, .or-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.or-divider::before {
+    left: 0;
+}
+
+.or-divider::after {
+    right: 0;
+}
+
+.otp-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.error-message {
+    color: #e53935;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+.cart-toggle {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+/* Cart Toggle */
+.cart-toggle {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+ /* Order Page Styles */
+ .order-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgb(16, 15, 15);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.order-summary {
+    background: #cccad3;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #2d9d4f;
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #733131;
+}
+
+#order-form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.payment-options {
+    margin: 20px 0;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.payment-option.selected {
+    border-color: #4CAF50;
+    background-color: #f0fff0;
+}
+
+.payment-option i {
+    font-size: 2rem;
+    margin-right: 15px;
+    color: #555;
+}
+
+.payment-details {
+    flex: 1;
+}
+
+.payment-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.payment-desc {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.place-order-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #f57224;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.place-order-btn:hover {
+    background-color: #e0611a;
+}
+ /* Payment Page Styles */
+
+ .payment-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background: rgb(155, 64, 64);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #333; /* Added to ensure text color */
+}
+
+.payment-summary {
+    margin: 30px 0;
+    padding: 20px;
+    background: #9b7f7f;
+    border-radius: 8px;
+    color: #333; /* Added to ensure text color */
+}
+
+.payment-amount {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #270f0f;
+    border-bottom: 1px solid #371515;
+    color: #232f3e; /* Darker color for better visibility */
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    color: #333; /* Added to ensure text color */
+}
+
+.payment-method i {
+    font-size: 2rem;
+    margin-right: 10px;
+    color: #4285F4;
+}
+
+.payment-method span {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.pay-now-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #4285F4;
+    color: rgb(41, 164, 76);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.pay-now-btn:hover {
+    background-color: #3367D6;
+}
+
+.cancel-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #5e2020;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #1f1d1d;
+}
+ /* Confirmation Page Styles */
+ .confirmation-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.confirmation-icon {
+    font-size: 5rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.confirmation-icon i {
+    animation: bounce 0.5s;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #f57224;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.3s;
+}
+
+.continue-btn:hover {
+    background-color: #e0611a;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .bestsellers-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .product-detail {
+        flex-direction: column;
+    }
+    
+    .product-image {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-container {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        margin: 15px 0;
+        width: 100%;
+    }
+    
+    .nav-links {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+}        
+/* Cart Styles */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+}
+
+.cart-modal {
+    display: none;
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 350px;
+    max-width: 90%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.cart-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-header h3 {
+    margin: 0;
+    color: #232f3e;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.cart-items {
+    padding: 15px;
+}
+
+.cart-item-image {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.cart-item-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.cart-item-author {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.cart-item-price {
+    font-size: 0.9rem;
+    color: #e63946;
+    font-weight: bold;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.cart-item-quantity button {
+    width: 25px;
+    height: 25px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cart-item-quantity input {
+    width: 40px;
+    height: 25px;
+    text-align: center;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.cart-item-remove {
+    color: #e53935;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.2rem;
+}
+.cart-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+
+.checkout-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #f57224;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.checkout-btn:hover {
+    background-color: #e0611a;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 30px 0;
+    color: #666;
+}
+
+.empty-cart i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+/* Order Form */
+.order-form {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.order-form h3 {
+    margin-bottom: 15px;
+    color: #232f3e;
+}
+
+.order-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.order-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.order-form button:hover {
+    background-color: #3d8b40;
+}
+
+/* Payment Options */
+.payment-options {
+    margin-top: 20px;
+    display: none;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.payment-option:hover {
+    background-color: #f5f5f5;
+}
+
+.payment-option.selected {
+    border-color: #4CAF50;
+    background-color: #f0fff0;
+}
+
+.payment-option i {
+    font-size: 2rem;
+    margin-right: 15px;
+    color: #555;
+}
+
+.payment-option .payment-details {
+    flex: 1;
+}
+
+
+.payment-option .payment-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.cart-icon {
+    position: relative;
+    font-size: 1.2rem;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Header Styles */
+#bookswagon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 20px;
+}
+
+#bookswagon-header h1 {
+    color: #2c3e50;
+    font-size: 28px;
+}
+
+/* Search Bar */
+.search-container {
+    margin: 20px 0;
+    position: relative;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-container input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Navigation and User Icons */
+.user-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.icon {
+    font-size: 20px;
+    color: #2c3e50;
+    cursor: pointer;
+    position: relative;
+}
+
+.icon:hover {
+    color: #3498db;
+}
+
+.icon-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Main Content Layout */
+.main-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* Left Sidebar - Navigation */
+.sidebar {
+    width: 250px;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.sidebar h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar li:last-child {
+    border-bottom: none;
+}
+
+.sidebar li:hover {
+    color: #3498db;
+    cursor: pointer;
+}
+
+/* Right Sidebar - Cart */
+.cart-sidebar {
+    width: 300px; /* Reduced width */
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.cart-sidebar h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.cart-empty {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+}
+
+/* Main Content - Books Section */
+.content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.book-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+.book-author {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.discount-badge {
+    background-color: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* Checkout Section */
+.checkout-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.checkout-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.payment-option {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.payment-option h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.place-order-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.place-order-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .sidebar, .cart-sidebar {
+        width: 100%;
+    }
+    
+    .content {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+/* Cart Toggle */
+.cart-toggle {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .main-content, .cart-sidebar {
+        width: 100%;
+        position: static;
+        height: auto;
+    }
+    
+    .header-container {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        margin: 15px 0;
+        width: 100%;
+    }
+    
+    .nav-links {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .product-detail {
+        flex-direction: column;
+    }
+    
+    .product-image {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .bestsellers-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cart-item-info {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .cart-item-quantity {
+        align-self: flex-end;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="container header-container">
+                <a href="#" class="logo">Bookswagon</a>
+                <div class="search-box">
+                    <input type="text" id="mainSearchInput" placeholder="Search By Title, Author, Publisher Or ISBN">
+                    <button id="mainSearchButton"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-actions">
+                    <a href="#" id="loginLink">Login</a>
+                    <a href="#" id="wishlistLink">Wishlist</a>
+                    <a href="#" id="cartLink" class="cart-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                        </a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="#" id="homeLink">Home</a></li>
+                    <li><a href="#" id="newArrivalsLink">New Arrivals</a></li>
+                    <li><a href="#" id="boxSetsLink">Box Sets</a></li>
+                    <li><a href="#" id="bestsellersLink">Bestsellers</a></li>
+                    <li><a href="#" id="fictionLink">Fiction Books</a></li>
+                    <li><a href="#" id="awardWinnersLink">Award Winners</a></li>
+                    <li><a href="#" id="featuredAuthorsLink">Featured Authors</a></li>
+                    <li><a href="#" id="todaysDealLink">Today's Deal</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Main Content Container -->
+        <div class="container">
+            <!-- Home Page (default view) -->
+            <div id="home-page">
+                <h1>Grab Bestselling Books upto 50% Off!</h1>
+                
+                <div class="book-grid" id="bookGrid">
+                    <!-- Books will be dynamically inserted here -->
+                </div>
+                
+                <!-- Tagline Section -->
+                <section class="tagline-section">
+                    <h2>A MAN CALLED OVE</h2>
+                    <p class="tagline">DISCOVER BOOKS THAT CLICK</p>
+                </section>
+                
+                <!-- Category Links -->
+                <div class="category-links">
+                    <a href="#" class="category-link" data-category="best-seller">Best Seller</a>
+                    <a href="#" class="category-link">Award Winners</a>
+                    <a href="#" class="category-link">Box Sets</a>
+                    <a href="#" class="category-link">International Best Seller</a>
+                    <a href="#" class="category-link">New Arrivals</a>
+                    <a href="#" class="category-link">Fiction Books</a>
+                    <a href="#" class="category-link">Children Books</a>
+                    <a href="#" class="category-link">Comic Books</a>
+                    <a href="#" class="category-link">Tarot Cards</a>
+                </div>
+            </div>
+            
+            <!-- Best Sellers Page (hidden by default) -->
+            <div id="best-sellers-page" style="display: none;">
+                <h1 class="page-title">BEST SELLERS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="priceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="discountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="paperback" checked> <label for="paperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="hardcover" checked> <label for="hardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="otherBinding" checked> <label for="otherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="english" checked> <label for="english">English</label></li>
+                                <li><input type="checkbox" id="hindi" checked> <label for="hindi">Hindi</label></li>
+                                <li><input type="checkbox" id="marathi" checked> <label for="marathi">Marathi</label></li>
+                                <li><input type="checkbox" id="tamil" checked> <label for="tamil">Tamil</label></li>
+                                <li><input type="checkbox" id="otherLang" checked> <label for="otherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Best Sellers</h2>
+                            <p id="resultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="sortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="bestSellersGrid">
+                            <!-- Best sellers will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- New Arrivals Page -->
+            <div id="new-arrivals-page" style="display: none;">
+                <h1 class="page-title">NEW ARRIVALS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="newArrivalsPriceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="newArrivalsDiscountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="newArrivalsPaperback" checked> <label for="newArrivalsPaperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="newArrivalsHardcover" checked> <label for="newArrivalsHardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="newArrivalsOtherBinding" checked> <label for="newArrivalsOtherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="newArrivalsEnglish" checked> <label for="newArrivalsEnglish">English</label></li>
+                                <li><input type="checkbox" id="newArrivalsHindi" checked> <label for="newArrivalsHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="newArrivalsMarathi" checked> <label for="newArrivalsMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="newArrivalsTamil" checked> <label for="newArrivalsTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="newArrivalsOtherLang" checked> <label for="newArrivalsOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>New Arrivals</h2>
+                            <p id="newArrivalsResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="newArrivalsSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="newArrivalsGrid">
+                            <!-- New arrivals will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Box Sets Page -->
+            <div id="box-sets-page" style="display: none;">
+                <h1 class="page-title">BOX SETS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="boxSetsPriceRange" min="100" max="5000" value="5000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹5000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="boxSetsDiscountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="boxSetsEnglish" checked> <label for="boxSetsEnglish">English</label></li>
+                                <li><input type="checkbox" id="boxSetsHindi" checked> <label for="boxSetsHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="boxSetsMarathi" checked> <label for="boxSetsMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="boxSetsTamil" checked> <label for="boxSetsTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="boxSetsOtherLang" checked> <label for="boxSetsOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Box Sets</h2>
+                            <p id="boxSetsResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="boxSetsSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="boxSetsGrid">
+                            <!-- Box sets will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fiction Books Page -->
+            <div id="fiction-books-page" style="display: none;">
+                <h1 class="page-title">FICTION BOOKS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="fictionPriceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="fictionDiscountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="fictionPaperback" checked> <label for="fictionPaperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="fictionHardcover" checked> <label for="fictionHardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="fictionOtherBinding" checked> <label for="fictionOtherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="fictionEnglish" checked> <label for="fictionEnglish">English</label></li>
+                                <li><input type="checkbox" id="fictionHindi" checked> <label for="fictionHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="fictionMarathi" checked> <label for="fictionMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="fictionTamil" checked> <label for="fictionTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="fictionOtherLang" checked> <label for="fictionOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Fiction Books</h2>
+                            <p id="fictionResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="fictionSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="fictionGrid">
+                            <!-- Fiction books will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Award Winners Page -->
+            <div id="award-winners-page" style="display: none;">
+                <h1 class="page-title">AWARD WINNERS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="awardPriceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="awardDiscountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="awardPaperback" checked> <label for="awardPaperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="awardHardcover" checked> <label for="awardHardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="awardOtherBinding" checked> <label for="awardOtherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="awardEnglish" checked> <label for="awardEnglish">English</label></li>
+                                <li><input type="checkbox" id="awardHindi" checked> <label for="awardHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="awardMarathi" checked> <label for="awardMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="awardTamil" checked> <label for="awardTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="awardOtherLang" checked> <label for="awardOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Award Winners</h2>
+                            <p id="awardResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="awardSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="awardGrid">
+                            <!-- Award winners will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Featured Authors Page -->
+            <div id="featured-authors-page" style="display: none;">
+                <h1 class="page-title">FEATURED AUTHORS</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="featuredPriceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="featuredDiscountRange" min="0" max="70" value="70">
+                            <div class="range-values">
+                                <span>0%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="featuredPaperback" checked> <label for="featuredPaperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="featuredHardcover" checked> <label for="featuredHardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="featuredOtherBinding" checked> <label for="featuredOtherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="featuredEnglish" checked> <label for="featuredEnglish">English</label></li>
+                                <li><input type="checkbox" id="featuredHindi" checked> <label for="featuredHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="featuredMarathi" checked> <label for="featuredMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="featuredTamil" checked> <label for="featuredTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="featuredOtherLang" checked> <label for="featuredOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Featured Authors</h2>
+                            <p id="featuredResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="featuredSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="featuredGrid">
+                            <!-- Featured authors books will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Deal Page -->
+            <div id="todays-deal-page" style="display: none;">
+                <h1 class="page-title">TODAY'S DEAL</h1>
+                
+                <div class="bestsellers-container">
+                    <div class="sidebar">
+                        <h2>Refine your Search</h2>
+                        
+                        <div class="filter-group">
+                            <h3>Price range</h3>
+                            <input type="range" class="range-input" id="dealPriceRange" min="100" max="2000" value="2000">
+                            <div class="range-values">
+                                <span>₹100</span>
+                                <span>₹2000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Discount Range</h3>
+                            <input type="range" class="range-input" id="dealDiscountRange" min="30" max="70" value="70">
+                            <div class="range-values">
+                                <span>30%</span>
+                                <span>70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Binding</h3>
+                            <ul>
+                                <li><input type="checkbox" id="dealPaperback" checked> <label for="dealPaperback">Paper Back</label></li>
+                                <li><input type="checkbox" id="dealHardcover" checked> <label for="dealHardcover">Hard Cover</label></li>
+                                <li><input type="checkbox" id="dealOtherBinding" checked> <label for="dealOtherBinding">Others</label></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h3>Language</h3>
+                            <ul>
+                                <li><input type="checkbox" id="dealEnglish" checked> <label for="dealEnglish">English</label></li>
+                                <li><input type="checkbox" id="dealHindi" checked> <label for="dealHindi">Hindi</label></li>
+                                <li><input type="checkbox" id="dealMarathi" checked> <label for="dealMarathi">Marathi</label></li>
+                                <li><input type="checkbox" id="dealTamil" checked> <label for="dealTamil">Tamil</label></li>
+                                <li><input type="checkbox" id="dealOtherLang" checked> <label for="dealOtherLang">Others</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="results-info">
+                            <h2>Today's Deal</h2>
+                            <p id="dealResultsCount">10 results found</p>
+                        </div>
+                        
+                        <div class="sort-options">
+                            <span>Sort By:</span>
+                            <select id="dealSortBy">
+                                <option value="price-low">Price Low to High</option>
+                                <option value="price-high">Price High to Low</option>
+                                <option value="discount">Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                        
+                        <div class="book-grid" id="dealGrid">
+                            <!-- Today's deal books will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Detail Page (hidden by default) -->
+            <div id="product-detail-page" style="display: none;">
+                <div class="product-detail">
+                    <img src="" alt="Book Cover" class="product-image" id="detailImage">
+                    <div class="product-info">
+                        <h1 class="product-title" id="detailTitle"></h1>
+                        <p class="product-author" id="detailAuthor"></p>
+                        <div class="discount-badge" id="detailDiscount"></div>
+                        <div class="product-price">
+                            <span class="current-price" id="detailPrice"></span>
+                            <span class="original-price" id="detailOriginalPrice"></span>
+                        </div>
+                        <p class="product-description" id="detailDescription"></p>
+                        <div class="quantity-selector">
+                            <button id="decreaseQuantity">-</button>
+                            <input type="number" value="1" min="1" id="quantityInput">
+                            <button id="increaseQuantity">+</button>
+                        </div>
+                        <div>
+                            <button class="buy-now" id="buyNowBtn">Buy Now</button>
+                            <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+        <h2>Your Cart</h2>
+    
+        <div id="cart-items">
+            <div class="empty-cart">
+                <i class="fas fa-book-open"></i>
+                <p>Your cart is empty</p>
+                <p>Start shopping to add items</p>
+            </div>
+        </div>
+        <div class="cart-total" id="cart-total" style="display:none;">Total: ₹0.00</div>
+        <button class="checkout-btn" id="checkout-btn" style="display:none;">Proceed to Checkout</button>
+        
+        <div class="order-form" id="order-form">
+            <h3>Complete Your Order</h3>
+            <form id="checkout-form">
+                <input type="text" id="name" placeholder="Your Name" required>
+                <input type="number" id="number" placeholder="Your Number" required>
+                <input type="text" id="location" placeholder="Your Location" required>
+                <input type="date" id="delivery-date" required>
+                <div class="payment-options" id="payment-options">
+                    <div class="payment-option" data-payment="gpay">
+                        <i class="fab fa-google-pay"></i>
+                        <div class="payment-details">
+                            <div class="payment-title">Google Pay</div>
+                            <div class="payment-desc">Pay securely with your Google account</div>
+                        </div>
+                    </div>
+                    <div class="payment-option" data-payment="cod">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div class="payment-details">
+                            <div class="payment-title">Cash on Delivery</div>
+                            <div class="payment-desc">Pay when you receive your order</div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="place-order-btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Login</h2>
+            <div class="form-group">
+                <label for="loginEmail">Mobile/Email</label>
+                <input type="text" id="loginEmail">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword">
+            </div>
+            <div class="forgot-password">
+                <a href="#">Forget your Password?</a>
+            </div>
+            <button class="login-button" id="loginButton">Login</button>
+            <div class="or-divider">OR</div>
+            <button class="otp-button">Request OTP</button>
+            <div class="error-message" id="loginError"></div>
+        </div>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Payment</h2>
+            <p>Redirecting to payment gateway...</p>
+            <div id="gpay-button-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Combined book data
+        const books = [
+            {
+                id: 1,
+                title: "Too Good To Be True",
+                author: "Prajakta Koli",
+                publisher: "Harpercollins Publishers India",
+                releaseDate: "13 Feb 2025",
+                price: 3003,
+                originalPrice: 3999,
+                discount: 24,
+                description: "Wickedly witty, tender and utterly relatable at every turn, Too Good to Be True by Prajakta Koli is the sparkling, true-blue, will-they-won't-they love story you've been waiting for!",
+                image: "https://m.media-amazon.com/images/I/41d1gVUK1yL._SY425_.jpg",
+                isbn10: "986569339X",
+                isbn13: "9789365693393",
+                weight: "231",
+                dimensions: "19%21x131",
+                binding: "Paperback",
+                language: "English",
+                category: "Bestsellers",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: false,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 2,
+                title: "Atomic Habits",
+                author: "James Clear",
+                publisher: "Random House",
+                releaseDate: "16 Oct 2018",
+                price: 399,
+                originalPrice: 599,
+                discount: 33,
+                description: "No matter your goals, Atomic Habits offers a proven framework for improving every day. James Clear, one of the world's leading experts on habit formation, reveals practical strategies that will teach you exactly how to form good habits, break bad ones, and master the tiny behaviors that lead to remarkable results.",
+                image: "https://m.media-amazon.com/images/I/51B7kuFwQFL._SY425_.jpg",
+                isbn10: "0735211299",
+                isbn13: "9780735211292",
+                weight: "408",
+                dimensions: "20.3x13.3x2.5",
+                binding: "Hard Cover",
+                language: "English",
+                category: "Bestsellers",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: false,
+                todaysDeal: false
+            },
+            {
+                id: 3,
+                title: "The Psychology of Money",
+                author: "Morgan Housel",
+                publisher: "Harriman House",
+                releaseDate: "8 Sep 2020",
+                price: 349,
+                originalPrice: 499,
+                discount: 30,
+                description: "Doing well with money isn't necessarily about what you know. It's about how you behave. And behavior is hard to teach, even to really smart people. Money—investing, personal finance, and business decisions—is typically taught as a math-based field, where data and formulas tell us exactly what to do. But in the real world people don't make financial decisions on a spreadsheet.",
+                image: "https://m.media-amazon.com/images/I/71pX8KbhJQL._SY425_.jpg",
+                isbn10: "0857197681",
+                isbn13: "9780857197689",
+                weight: "340",
+                dimensions: "13.8x21.6x1.8",
+                binding: "Paperback",
+                language: "English",
+                category: "Bestsellers",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: false,
+                todaysDeal: false
+            },
+            {
+                id: 4,
+                title: "A MAN CALLED OVE",
+                author: "FREDRIK BACKMAN",
+                publisher: "Atria Books",
+                releaseDate: "5 May 2015",
+                price: 350,
+                originalPrice: 499,
+                discount: 30,
+                description: "A grumpy yet loveable man finds his solitary world turned on its head when a boisterous young family moves in next door. Meet Ove. He's a curmudgeon—the kind of man who points at people he dislikes as if they were burglars caught outside his bedroom window. He has staunch principles, strict routines, and a short fuse. People call him 'the bitter neighbor from hell.' But must Ove be bitter just because he doesn't walk around with a smile plastered to his face all the time?",
+                image: "https://m.media-amazon.com/images/I/81a5K+ECmAL._SY425_.jpg",
+                isbn10: "1476738017",
+                isbn13: "9781476738017",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 5,
+                title: "MAN'S SEARCH FOR MEANING",
+                author: "VIKTOR FRANKL",
+                publisher: "Beacon Press",
+                releaseDate: "1 Jun 2006",
+                price: 259,
+                originalPrice: 299,
+                discount: 13,
+                description: "Psychiatrist Viktor Frankl's memoir has riveted generations of readers with its descriptions of life in Nazi death camps and its lessons for spiritual survival. Between 1942 and 1945 Frankl labored in four different camps, including Auschwitz, while his parents, brother, and pregnant wife perished. Based on his own experience and the experiences of others he treated later in his practice, Frankl argues that we cannot avoid suffering but we can choose how to cope with it, find meaning in it, and move forward with renewed purpose.",
+                image: "https://m.media-amazon.com/images/I/71pX8KbhJQL._SY425_.jpg",
+                isbn10: "080701429X",
+                isbn13: "9780807014295",
+                weight: "227",
+                dimensions: "13.5x20.3x1.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Bestsellers",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: false,
+                awardWinner: true,
+                boxSet: false,
+                fiction: false,
+                todaysDeal: false
+            },
+            {
+                id: 6,
+                title: "THE MONK WHO SOLD HIS FERRARI",
+                author: "ROBIN SHARMA",
+                publisher: "Jaico Publishing House",
+                releaseDate: "1 Jan 2007",
+                price: 199,
+                originalPrice: 299,
+                discount: 33,
+                description: "The Monk Who Sold His Ferrari is a self-help book by Robin Sharma, a writer and motivational speaker. The book is a business fable derived from Sharma's personal experiences after leaving his career as a litigation lawyer at the age of 25. The book tells the story of Julian Mantle, a successful but unhappy lawyer who has a heart attack and decides to sell all his possessions and travel to India to find happiness and enlightenment.",
+                image: "https://m.media-amazon.com/images/I/71aFt4+OTOL._SY425_.jpg",
+                isbn10: "817992162X",
+                isbn13: "9788179921623",
+                weight: "200",
+                dimensions: "13.5x20.3x1.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Bestsellers",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: false,
+                boxSet: false,
+                fiction: false,
+                todaysDeal: false
+            },
+            {
+                id: 7,
+                title: "Harry Potter Box Set: The Complete Collection",
+                author: "J.K. Rowling",
+                publisher: "Bloomsbury Publishing",
+                releaseDate: "1 Oct 2014",
+                price: 2999,
+                originalPrice: 4999,
+                discount: 40,
+                description: "All seven Harry Potter books in a beautiful boxed set. This is the perfect gift for collectors and new readers alike. The set includes: Harry Potter and the Philosopher's Stone, Harry Potter and the Chamber of Secrets, Harry Potter and the Prisoner of Azkaban, Harry Potter and the Goblet of Fire, Harry Potter and the Order of the Phoenix, Harry Potter and the Half-Blood Prince, Harry Potter and the Deathly Hallows.",
+                image: "https://m.media-amazon.com/images/I/91ocU8970hL._SY425_.jpg",
+                isbn10: "1408856778",
+                isbn13: "9781408856772",
+                weight: "4500",
+                dimensions: "13.5x20.3x15.2",
+                binding: "Hard Cover",
+                language: "English",
+                category: "Box Sets",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: true,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 8,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                publisher: "HarperOne",
+                releaseDate: "25 May 1993",
+                price: 299,
+                originalPrice: 399,
+                discount: 25,
+                description: "Paulo Coelho's masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure. His quest will lead him to riches far different—and far more satisfying—than he ever imagined. Santiago's journey teaches us about the essential wisdom of listening to our hearts, recognizing opportunity and learning to read the omens strewn along life's path, and, most importantly, following our dreams.",
+                image: "https://m.media-amazon.com/images/I/71aFt4+OTOL._SY425_.jpg",
+                isbn10: "0062315005",
+                isbn13: "9780062315007",
+                weight: "227",
+                dimensions: "13.5x20.3x1.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: true
+            },
+            {
+                id: 9,
+                title: "The Midnight Library",
+                author: "Matt Haig",
+                publisher: "Canongate Books",
+                releaseDate: "13 Aug 2020",
+                price: 349,
+                originalPrice: 499,
+                discount: 30,
+                description: "Between life and death there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived. To see how things would be if you had made other choices... Would you have done anything different, if you had the chance to undo your regrets?",
+                image: "https://m.media-amazon.com/images/I/81ocU8970hL._SY425_.jpg",
+                isbn10: "1786892734",
+                isbn13: "9781786892737",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Hard Cover",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: true,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: false,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: true
+            },
+            {
+                id: 10,
+                title: "The Lord of the Rings Boxed Set",
+                author: "J.R.R. Tolkien",
+                publisher: "HarperCollins",
+                releaseDate: "20 Oct 2011",
+                price: 2499,
+                originalPrice: 3999,
+                discount: 37,
+                description: "This special 50th anniversary hardback edition of J.R.R. Tolkien's masterpiece includes The Fellowship of the Ring, The Two Towers and The Return of the King, plus a special edition of The Hobbit, all housed in a matching box set. The books feature the classic cover designs by Tolkien himself.",
+                image: "https://m.media-amazon.com/images/I/91ocU8970hL._SY425_.jpg",
+                isbn10: "0007581149",
+                isbn13: "9780007581146",
+                weight: "5000",
+                dimensions: "13.5x20.3x15.2",
+                binding: "Hard Cover",
+                language: "English",
+                category: "Box Sets",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: true,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 11,
+                title: "The Silent Patient",
+                author: "Alex Michaelides",
+                publisher: "Orion",
+                releaseDate: "7 Feb 2019",
+                price: 299,
+                originalPrice: 399,
+                discount: 25,
+                description: "Alicia Berenson's life is seemingly perfect. A famous painter married to an in-demand fashion photographer, she lives in a grand house with big windows overlooking a park in one of London's most desirable areas. One evening her husband Gabriel returns home late from a fashion shoot, and Alicia shoots him five times in the face, and then never speaks another word.",
+                image: "https://m.media-amazon.com/images/I/71aFt4+OTOL._SY425_.jpg",
+                isbn10: "1409181634",
+                isbn13: "9781409181637",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: true,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: false,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: true
+            },
+            {
+                id: 12,
+                title: "The Girl on the Train",
+                author: "Paula Hawkins",
+                publisher: "Riverhead Books",
+                releaseDate: "13 Jan 2015",
+                price: 349,
+                originalPrice: 499,
+                discount: 30,
+                description: "Rachel takes the same commuter train every morning. Every day she rattles down the track, flashes past a stretch of cozy suburban homes, and stops at the signal that allows her to daily watch the same couple breakfasting on their deck. She's even started to feel like she knows them. 'Jess and Jason,' she calls them. Their life—as she sees it—is perfect. Not unlike the life she recently lost.",
+                image: "https://m.media-amazon.com/images/I/81ocU8970hL._SY425_.jpg",
+                isbn10: "1594633665",
+                isbn13: "9781594633669",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 13,
+                title: "The Kite Runner",
+                author: "Khaled Hosseini",
+                publisher: "Riverhead Books",
+                releaseDate: "29 May 2003",
+                price: 399,
+                originalPrice: 599,
+                discount: 33,
+                description: "The Kite Runner is the story of Amir, a Sunni Muslim, who struggles to find his place in the world because of the aftereffects and fallout from a series of traumatic childhood events. An adult Amir opens the novel in the present-day United States with a vague reference to one of these events, and then the novel flashes back to Amir's childhood in Afghanistan.",
+                image: "https://m.media-amazon.com/images/I/71aFt4+OTOL._SY425_.jpg",
+                isbn10: "159463193X",
+                isbn13: "9781594631931",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 14,
+                title: "The God of Small Things",
+                author: "Arundhati Roy",
+                publisher: "IndiaInk",
+                releaseDate: "1 Jan 1997",
+                price: 299,
+                originalPrice: 399,
+                discount: 25,
+                description: "The God of Small Things is a family drama novel that explores how small, seemingly insignificant occurrences, decisions and experiences shape people's behavior and their lives. The story is about the childhood experiences of fraternal twins whose lives are destroyed by the 'Love Laws' that lay down 'who should be loved, and how. And how much.'",
+                image: "https://m.media-amazon.com/images/I/81ocU8970hL._SY425_.jpg",
+                isbn10: "8172234989",
+                isbn13: "9788172234980",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            },
+            {
+                id: 15,
+                title: "The White Tiger",
+                author: "Aravind Adiga",
+                publisher: "HarperCollins",
+                releaseDate: "22 Apr 2008",
+                price: 349,
+                originalPrice: 499,
+                discount: 30,
+                description: "The White Tiger is the story of Balram Halwai's life as a self-declared 'self-made entrepreneur' as he recounts it in a letter to visiting Chinese official Premier Wen Jiabao. Balram's life begins in rural poverty in a village in the 'Darkness' (as he refers to rural India), where he is taken out of school to work in a tea shop by his grandmother.",
+                image: "https://m.media-amazon.com/images/I/71aFt4+OTOL._SY425_.jpg",
+                isbn10: "817223847X",
+                isbn13: "9788172238476",
+                weight: "340",
+                dimensions: "13.5x20.3x2.5",
+                binding: "Paperback",
+                language: "English",
+                category: "Fiction Books",
+                newArrival: false,
+                bestSeller: true,
+                featuredAuthor: true,
+                awardWinner: true,
+                boxSet: false,
+                fiction: true,
+                todaysDeal: false
+            }
+        ];
+
+        // DOM elements
+        const homePage = document.getElementById('home-page');
+        const bestSellersPage = document.getElementById('best-sellers-page');
+        const newArrivalsPage = document.getElementById('new-arrivals-page');
+        const boxSetsPage = document.getElementById('box-sets-page');
+        const fictionBooksPage = document.getElementById('fiction-books-page');
+        const awardWinnersPage = document.getElementById('award-winners-page');
+        const featuredAuthorsPage = document.getElementById('featured-authors-page');
+        const todaysDealPage = document.getElementById('todays-deal-page');
+        const productDetailPage = document.getElementById('product-detail-page');
+        const bookGrid = document.getElementById('bookGrid');
+        const bestSellersGrid = document.getElementById('bestSellersGrid');
+        const newArrivalsGrid = document.getElementById('newArrivalsGrid');
+        const boxSetsGrid = document.getElementById('boxSetsGrid');
+        const fictionGrid = document.getElementById('fictionGrid');
+        const awardGrid = document.getElementById('awardGrid');
+        const featuredGrid = document.getElementById('featuredGrid');
+        const dealGrid = document.getElementById('dealGrid');
+        const mainSearchInput = document.getElementById('mainSearchInput');
+        const mainSearchButton = document.getElementById('mainSearchButton');
+        const resultsCount = document.getElementById('resultsCount');
+        const newArrivalsResultsCount = document.getElementById('newArrivalsResultsCount');
+        const boxSetsResultsCount = document.getElementById('boxSetsResultsCount');
+        const fictionResultsCount = document.getElementById('fictionResultsCount');
+        const awardResultsCount = document.getElementById('awardResultsCount');
+        const featuredResultsCount = document.getElementById('featuredResultsCount');
+        const dealResultsCount = document.getElementById('dealResultsCount');
+        const priceRange = document.getElementById('priceRange');
+        const discountRange = document.getElementById('discountRange');
+        const newArrivalsPriceRange = document.getElementById('newArrivalsPriceRange');
+        const newArrivalsDiscountRange = document.getElementById('newArrivalsDiscountRange');
+        const boxSetsPriceRange = document.getElementById('boxSetsPriceRange');
+        const boxSetsDiscountRange = document.getElementById('boxSetsDiscountRange');
+        const fictionPriceRange = document.getElementById('fictionPriceRange');
+        const fictionDiscountRange = document.getElementById('fictionDiscountRange');
+        const awardPriceRange = document.getElementById('awardPriceRange');
+        const awardDiscountRange = document.getElementById('awardDiscountRange');
+        const featuredPriceRange = document.getElementById('featuredPriceRange');
+        const featuredDiscountRange = document.getElementById('featuredDiscountRange');
+        const dealPriceRange = document.getElementById('dealPriceRange');
+        const dealDiscountRange = document.getElementById('dealDiscountRange');
+        const sortBy = document.getElementById('sortBy');
+        const newArrivalsSortBy = document.getElementById('newArrivalsSortBy');
+        const boxSetsSortBy = document.getElementById('boxSetsSortBy');
+        const fictionSortBy = document.getElementById('fictionSortBy');
+        const awardSortBy = document.getElementById('awardSortBy');
+        const featuredSortBy = document.getElementById('featuredSortBy');
+        const dealSortBy = document.getElementById('dealSortBy');
+        const loginModal = document.getElementById('loginModal');
+        const paymentModal = document.getElementById('paymentModal');
+        const loginLink = document.getElementById('loginLink');
+        const loginButton = document.getElementById('loginButton');
+        const loginError = document.getElementById('loginError');
+        const buyNowBtn = document.getElementById('buyNowBtn');
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const quantityInput = document.getElementById('quantityInput');
+        const decreaseQuantity = document.getElementById('decreaseQuantity');
+        const increaseQuantity = document.getElementById('increaseQuantity');
+        const detailImage = document.getElementById('detailImage');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailAuthor = document.getElementById('detailAuthor');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailOriginalPrice = document.getElementById('detailOriginalPrice');
+        const detailDiscount = document.getElementById('detailDiscount');
+        const detailDescription = document.getElementById('detailDescription');
+        const cartItemsEl = document.getElementById('cart-items');
+        const cartTotalEl = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const orderForm = document.getElementById('order-form');
+        const checkoutForm = document.getElementById('checkout-form');
+        const paymentOptions = document.getElementById('payment-options');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        const cartCount = document.getElementById('cartCount');
+        const cartLink = document.getElementById('cartLink');
+
+        // Filter checkboxes
+        const bindingCheckboxes = {
+            paperback: document.getElementById('paperback'),
+            hardcover: document.getElementById('hardcover'),
+            otherBinding: document.getElementById('otherBinding')
+        };
+
+        const languageCheckboxes = {
+            english: document.getElementById('english'),
+            hindi: document.getElementById('hindi'),
+            marathi: document.getElementById('marathi'),
+            tamil: document.getElementById('tamil'),
+            otherLang: document.getElementById('otherLang')
+        };
+
+        const newArrivalsBindingCheckboxes = {
+            paperback: document.getElementById('newArrivalsPaperback'),
+            hardcover: document.getElementById('newArrivalsHardcover'),
+            otherBinding: document.getElementById('newArrivalsOtherBinding')
+        };
+
+        const newArrivalsLanguageCheckboxes = {
+            english: document.getElementById('newArrivalsEnglish'),
+            hindi: document.getElementById('newArrivalsHindi'),
+            marathi: document.getElementById('newArrivalsMarathi'),
+            tamil: document.getElementById('newArrivalsTamil'),
+            otherLang: document.getElementById('newArrivalsOtherLang')
+        };
+
+        const boxSetsLanguageCheckboxes = {
+            english: document.getElementById('boxSetsEnglish'),
+            hindi: document.getElementById('boxSetsHindi'),
+            marathi: document.getElementById('boxSetsMarathi'),
+            tamil: document.getElementById('boxSetsTamil'),
+            otherLang: document.getElementById('boxSetsOtherLang')
+        };
+
+        const fictionBindingCheckboxes = {
+            paperback: document.getElementById('fictionPaperback'),
+            hardcover: document.getElementById('fictionHardcover'),
+            otherBinding: document.getElementById('fictionOtherBinding')
+        };
+
+        const fictionLanguageCheckboxes = {
+            english: document.getElementById('fictionEnglish'),
+            hindi: document.getElementById('fictionHindi'),
+            marathi: document.getElementById('fictionMarathi'),
+            tamil: document.getElementById('fictionTamil'),
+            otherLang: document.getElementById('fictionOtherLang')
+        };
+
+        const awardBindingCheckboxes = {
+            paperback: document.getElementById('awardPaperback'),
+            hardcover: document.getElementById('awardHardcover'),
+            otherBinding: document.getElementById('awardOtherBinding')
+        };
+
+        const awardLanguageCheckboxes = {
+            english: document.getElementById('awardEnglish'),
+            hindi: document.getElementById('awardHindi'),
+            marathi: document.getElementById('awardMarathi'),
+            tamil: document.getElementById('awardTamil'),
+            otherLang: document.getElementById('awardOtherLang')
+        };
+
+        const featuredBindingCheckboxes = {
+            paperback: document.getElementById('featuredPaperback'),
+            hardcover: document.getElementById('featuredHardcover'),
+            otherBinding: document.getElementById('featuredOtherBinding')
+        };
+
+        const featuredLanguageCheckboxes = {
+            english: document.getElementById('featuredEnglish'),
+            hindi: document.getElementById('featuredHindi'),
+            marathi: document.getElementById('featuredMarathi'),
+            tamil: document.getElementById('featuredTamil'),
+            otherLang: document.getElementById('featuredOtherLang')
+        };
+
+        const dealBindingCheckboxes = {
+            paperback: document.getElementById('dealPaperback'),
+            hardcover: document.getElementById('dealHardcover'),
+            otherBinding: document.getElementById('dealOtherBinding')
+        };
+
+        const dealLanguageCheckboxes = {
+            english: document.getElementById('dealEnglish'),
+            hindi: document.getElementById('dealHindi'),
+            marathi: document.getElementById('dealMarathi'),
+            tamil: document.getElementById('dealTamil'),
+            otherLang: document.getElementById('dealOtherLang')
+        };
+
+        // Navigation links
+        const navLinks = {
+            home: document.getElementById('homeLink'),
+            newArrivals: document.getElementById('newArrivalsLink'),
+            boxSets: document.getElementById('boxSetsLink'),
+            bestsellers: document.getElementById('bestsellersLink'),
+            fiction: document.getElementById('fictionLink'),
+            awardWinners: document.getElementById('awardWinnersLink'),
+            featuredAuthors: document.getElementById('featuredAuthorsLink'),
+            todaysDeal: document.getElementById('todaysDealLink')
+        };
+
+        // User state
+        let currentUser = null;
+        let selectedBook = null;
+        let cartItems = [];
+        let wishlistItems = [];
+        let selectedPaymentMethod = null;
+
+        // Initialize the app
+        function init() {
+            displayBooks(books, bookGrid);
+            setupEventListeners();
+            updateCartCount();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Main search functionality
+            mainSearchButton.addEventListener('click', performMainSearch);
+            mainSearchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performMainSearch();
+            });
+
+            // Navigation functionality
+            navLinks.bestsellers.addEventListener('click', function(e) {
+                e.preventDefault();
+                showBestSellersPage();
+            });
+
+            navLinks.home.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomePage();
+            });
+
+            navLinks.newArrivals.addEventListener('click', function(e) {
+                e.preventDefault();
+                showNewArrivalsPage();
+            });
+
+            navLinks.boxSets.addEventListener('click', function(e) {
+                e.preventDefault();
+                showBoxSetsPage();
+            });
+
+            navLinks.fiction.addEventListener('click', function(e) {
+                e.preventDefault();
+                showFictionBooksPage();
+            });
+
+            navLinks.awardWinners.addEventListener('click', function(e) {
+                e.preventDefault();
+                showAwardWinnersPage();
+            });
+
+            navLinks.featuredAuthors.addEventListener('click', function(e) {
+                e.preventDefault();
+                showFeaturedAuthorsPage();
+            });
+
+            navLinks.todaysDeal.addEventListener('click', function(e) {
+                e.preventDefault();
+                showTodaysDealPage();
+            });
+
+            // Best sellers page filters
+            priceRange.addEventListener('input', updatePriceRangeValue);
+            discountRange.addEventListener('input', updateDiscountRangeValue);
+            sortBy.addEventListener('change', filterBestSellers);
+
+            // New arrivals page filters
+            newArrivalsPriceRange.addEventListener('input', updateNewArrivalsPriceRangeValue);
+            newArrivalsDiscountRange.addEventListener('input', updateNewArrivalsDiscountRangeValue);
+            newArrivalsSortBy.addEventListener('change', filterNewArrivals);
+
+            // Box sets page filters
+            boxSetsPriceRange.addEventListener('input', updateBoxSetsPriceRangeValue);
+            boxSetsDiscountRange.addEventListener('input', updateBoxSetsDiscountRangeValue);
+            boxSetsSortBy.addEventListener('change', filterBoxSets);
+
+            // Fiction books page filters
+            fictionPriceRange.addEventListener('input', updateFictionPriceRangeValue);
+            fictionDiscountRange.addEventListener('input', updateFictionDiscountRangeValue);
+            fictionSortBy.addEventListener('change', filterFictionBooks);
+
+            // Award winners page filters
+            awardPriceRange.addEventListener('input', updateAwardPriceRangeValue);
+            awardDiscountRange.addEventListener('input', updateAwardDiscountRangeValue);
+            awardSortBy.addEventListener('change', filterAwardWinners);
+
+            // Featured authors page filters
+            featuredPriceRange.addEventListener('input', updateFeaturedPriceRangeValue);
+            featuredDiscountRange.addEventListener('input', updateFeaturedDiscountRangeValue);
+            featuredSortBy.addEventListener('change', filterFeaturedAuthors);
+
+            // Today's deal page filters
+            dealPriceRange.addEventListener('input', updateDealPriceRangeValue);
+            dealDiscountRange.addEventListener('input', updateDealDiscountRangeValue);
+            dealSortBy.addEventListener('change', filterTodaysDeal);
+
+            // Add event listeners to binding checkboxes
+            Object.values(bindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterBestSellers);
+            });
+
+            Object.values(newArrivalsBindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterNewArrivals);
+            });
+
+            Object.values(fictionBindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterFictionBooks);
+            });
+
+            Object.values(awardBindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterAwardWinners);
+            });
+
+            Object.values(featuredBindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterFeaturedAuthors);
+            });
+
+            Object.values(dealBindingCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterTodaysDeal);
+            });
+
+            // Add event listeners to language checkboxes
+            Object.values(languageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterBestSellers);
+            });
+
+            Object.values(newArrivalsLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterNewArrivals);
+            });
+
+            Object.values(boxSetsLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterBoxSets);
+            });
+
+            Object.values(fictionLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterFictionBooks);
+            });
+
+            Object.values(awardLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterAwardWinners);
+            });
+
+            Object.values(featuredLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterFeaturedAuthors);
+            });
+
+            Object.values(dealLanguageCheckboxes).forEach(checkbox => {
+                checkbox.addEventListener('change', filterTodaysDeal);
+            });
+
+            // Login modal
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === loginModal) {
+                    loginModal.style.display = 'none';
+                }
+                if (e.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+            });
+            
+            // Login button
+            loginButton.addEventListener('click', handleLogin);
+            
+            // Buy now button
+            buyNowBtn.addEventListener('click', handleBuyNow);
+            
+            // Add to cart button
+            addToCartBtn.addEventListener('click', handleAddToCart);
+            
+            // Quantity controls
+            decreaseQuantity.addEventListener('click', function() {
+                if (quantityInput.value > 1) {
+                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                }
+            });
+            
+            increaseQuantity.addEventListener('click', function() {
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+            });
+
+            // Category links
+            document.querySelectorAll('.category-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category') || this.textContent;
+                    filterByCategory(category);
+                });
+            });
+
+            // Checkout button
+            checkoutBtn.addEventListener('click', function() {
+                orderForm.style.display = 'block';
+                paymentOptions.style.display = 'block';
+            });
+
+            // Payment option selection
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    selectedPaymentMethod = this.getAttribute('data-payment');
+                });
+            });
+
+            // Checkout form submission
+            checkoutForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitOrder(e);
+            });
+
+            // Cart link click
+            cartLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                // In mobile view, we might want to scroll to cart
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.cart-sidebar').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Show home page
+        function showHomePage() {
+            homePage.style.display = 'block';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            displayBooks(books, bookGrid);
+        }
+
+        // Show best sellers page
+        function showBestSellersPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'block';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterBestSellers();
+        }
+
+        // Show new arrivals page
+        function showNewArrivalsPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'block';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterNewArrivals();
+        }
+
+        // Show box sets page
+        function showBoxSetsPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'block';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterBoxSets();
+        }
+
+        // Show fiction books page
+        function showFictionBooksPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'block';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterFictionBooks();
+        }
+
+        // Show award winners page
+        function showAwardWinnersPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'block';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterAwardWinners();
+        }
+
+        // Show featured authors page
+        function showFeaturedAuthorsPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'block';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+            filterFeaturedAuthors();
+        }
+
+        // Show today's deal page
+        function showTodaysDealPage() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'block';
+            productDetailPage.style.display = 'none';
+            filterTodaysDeal();
+        }
+
+        // Show product detail page
+        function showProductDetail(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            selectedBook = book;
+            
+            detailImage.src = book.image;
+            detailTitle.textContent = book.title;
+            detailAuthor.textContent = `By: ${book.author}${book.publisher ? ` | Publisher: ${book.publisher}` : ''}${book.releaseDate ? ` | Released: ${book.releaseDate}` : ''}`;
+            detailPrice.textContent = `₹${book.price.toLocaleString()}`;
+            detailOriginalPrice.textContent = `₹${book.originalPrice.toLocaleString()}`;
+            detailDiscount.textContent = `${book.discount}% OFF`;
+            detailDescription.textContent = book.description || 'No description available';
+            
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'block';
+        }
+
+        // Perform main search
+        function performMainSearch() {
+            const searchTerm = mainSearchInput.value.toLowerCase();
+            if (searchTerm.trim() === '') {
+                displayBooks(books, bookGrid);
+                return;
+            }
+
+            const filteredBooks = books.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) || 
+                book.author.toLowerCase().includes(searchTerm) ||
+                (book.publisher && book.publisher.toLowerCase().includes(searchTerm)) ||
+                (book.isbn10 && book.isbn10.includes(searchTerm)) ||
+                (book.isbn13 && book.isbn13.includes(searchTerm))
+            );
+
+            displayBooks(filteredBooks, bookGrid);
+        }
+
+        // Filter by category
+        function filterByCategory(category) {
+            let filteredBooks = [];
+            
+            switch(category.toLowerCase()) {
+                case 'best seller':
+                case 'bestsellers':
+                    filteredBooks = books.filter(book => book.bestSeller);
+                    break;
+                case 'award winners':
+                    filteredBooks = books.filter(book => book.awardWinner);
+                    break;
+                case 'box sets':
+                    filteredBooks = books.filter(book => book.boxSet);
+                    break;
+                case 'new arrivals':
+                    filteredBooks = books.filter(book => book.newArrival);
+                    break;
+                case 'fiction books':
+                    filteredBooks = books.filter(book => book.fiction);
+                    break;
+                case 'featured authors':
+                    filteredBooks = books.filter(book => book.featuredAuthor);
+                    break;
+                case 'today\'s deal':
+                    filteredBooks = books.filter(book => book.todaysDeal);
+                    break;
+                default:
+                    filteredBooks = books.filter(book => 
+                        book.category.toLowerCase() === category.toLowerCase()
+                    );
+            }
+            
+            displayBooks(filteredBooks, bookGrid);
+        }
+
+        // Update price range display for best sellers
+        function updatePriceRangeValue() {
+            const priceValue = document.querySelector('#best-sellers-page .range-values span:first-child');
+            priceValue.textContent = `₹${priceRange.value}`;
+            filterBestSellers();
+        }
+
+        // Update discount range display for best sellers
+        function updateDiscountRangeValue() {
+            const discountValue = document.querySelector('#best-sellers-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${discountRange.value}%`;
+            filterBestSellers();
+        }
+
+        // Update price range display for new arrivals
+        function updateNewArrivalsPriceRangeValue() {
+            const priceValue = document.querySelector('#new-arrivals-page .range-values span:first-child');
+            priceValue.textContent = `₹${newArrivalsPriceRange.value}`;
+            filterNewArrivals();
+        }
+
+        // Update discount range display for new arrivals
+        function updateNewArrivalsDiscountRangeValue() {
+            const discountValue = document.querySelector('#new-arrivals-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${newArrivalsDiscountRange.value}%`;
+            filterNewArrivals();
+        }
+
+        // Update price range display for box sets
+        function updateBoxSetsPriceRangeValue() {
+            const priceValue = document.querySelector('#box-sets-page .range-values span:first-child');
+            priceValue.textContent = `₹${boxSetsPriceRange.value}`;
+            filterBoxSets();
+        }
+
+        // Update discount range display for box sets
+        function updateBoxSetsDiscountRangeValue() {
+            const discountValue = document.querySelector('#box-sets-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${boxSetsDiscountRange.value}%`;
+            filterBoxSets();
+        }
+
+        // Update price range display for fiction books
+        function updateFictionPriceRangeValue() {
+            const priceValue = document.querySelector('#fiction-books-page .range-values span:first-child');
+            priceValue.textContent = `₹${fictionPriceRange.value}`;
+            filterFictionBooks();
+        }
+
+        // Update discount range display for fiction books
+        function updateFictionDiscountRangeValue() {
+            const discountValue = document.querySelector('#fiction-books-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${fictionDiscountRange.value}%`;
+            filterFictionBooks();
+        }
+
+        // Update price range display for award winners
+        function updateAwardPriceRangeValue() {
+            const priceValue = document.querySelector('#award-winners-page .range-values span:first-child');
+            priceValue.textContent = `₹${awardPriceRange.value}`;
+            filterAwardWinners();
+        }
+
+        // Update discount range display for award winners
+        function updateAwardDiscountRangeValue() {
+            const discountValue = document.querySelector('#award-winners-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${awardDiscountRange.value}%`;
+            filterAwardWinners();
+        }
+
+        // Update price range display for featured authors
+        function updateFeaturedPriceRangeValue() {
+            const priceValue = document.querySelector('#featured-authors-page .range-values span:first-child');
+            priceValue.textContent = `₹${featuredPriceRange.value}`;
+            filterFeaturedAuthors();
+        }
+
+        // Update discount range display for featured authors
+        function updateFeaturedDiscountRangeValue() {
+            const discountValue = document.querySelector('#featured-authors-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${featuredDiscountRange.value}%`;
+            filterFeaturedAuthors();
+        }
+
+        // Update price range display for today's deal
+        function updateDealPriceRangeValue() {
+            const priceValue = document.querySelector('#todays-deal-page .range-values span:first-child');
+            priceValue.textContent = `₹${dealPriceRange.value}`;
+            filterTodaysDeal();
+        }
+
+        // Update discount range display for today's deal
+        function updateDealDiscountRangeValue() {
+            const discountValue = document.querySelector('#todays-deal-page .filter-group:nth-child(2) .range-values span:first-child');
+            discountValue.textContent = `${dealDiscountRange.value}%`;
+            filterTodaysDeal();
+        }
+
+        // Filter and sort best sellers
+        function filterBestSellers() {
+            const maxPrice = parseInt(priceRange.value);
+            const minDiscount = parseInt(discountRange.value);
+            const sortValue = sortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (bindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (bindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (bindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (languageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (languageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (languageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (languageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (languageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.bestSeller && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            resultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, bestSellersGrid, true);
+        }
+
+        // Filter and sort new arrivals
+        function filterNewArrivals() {
+            const maxPrice = parseInt(newArrivalsPriceRange.value);
+            const minDiscount = parseInt(newArrivalsDiscountRange.value);
+            const sortValue = newArrivalsSortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (newArrivalsBindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (newArrivalsBindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (newArrivalsBindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (newArrivalsLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (newArrivalsLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (newArrivalsLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (newArrivalsLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (newArrivalsLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.newArrival && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            newArrivalsResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, newArrivalsGrid, true);
+        }
+
+        // Filter and sort box sets
+        function filterBoxSets() {
+            const maxPrice = parseInt(boxSetsPriceRange.value);
+            const minDiscount = parseInt(boxSetsDiscountRange.value);
+            const sortValue = boxSetsSortBy.value;
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (boxSetsLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (boxSetsLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (boxSetsLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (boxSetsLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (boxSetsLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.boxSet && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            boxSetsResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, boxSetsGrid, true);
+        }
+
+        // Filter and sort fiction books
+        function filterFictionBooks() {
+            const maxPrice = parseInt(fictionPriceRange.value);
+            const minDiscount = parseInt(fictionDiscountRange.value);
+            const sortValue = fictionSortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (fictionBindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (fictionBindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (fictionBindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (fictionLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (fictionLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (fictionLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (fictionLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (fictionLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.fiction && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            fictionResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, fictionGrid, true);
+        }
+
+        // Filter and sort award winners
+        function filterAwardWinners() {
+            const maxPrice = parseInt(awardPriceRange.value);
+            const minDiscount = parseInt(awardDiscountRange.value);
+            const sortValue = awardSortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (awardBindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (awardBindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (awardBindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (awardLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (awardLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (awardLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (awardLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (awardLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.awardWinner && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            awardResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, awardGrid, true);
+        }
+
+        // Filter and sort featured authors
+        function filterFeaturedAuthors() {
+            const maxPrice = parseInt(featuredPriceRange.value);
+            const minDiscount = parseInt(featuredDiscountRange.value);
+            const sortValue = featuredSortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (featuredBindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (featuredBindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (featuredBindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (featuredLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (featuredLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (featuredLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (featuredLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (featuredLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.featuredAuthor && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            featuredResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, featuredGrid, true);
+        }
+
+        // Filter and sort today's deal
+        function filterTodaysDeal() {
+            const maxPrice = parseInt(dealPriceRange.value);
+            const minDiscount = parseInt(dealDiscountRange.value);
+            const sortValue = dealSortBy.value;
+            
+            // Get selected bindings
+            const selectedBindings = [];
+            if (dealBindingCheckboxes.paperback.checked) selectedBindings.push('Paperback');
+            if (dealBindingCheckboxes.hardcover.checked) selectedBindings.push('Hard Cover');
+            if (dealBindingCheckboxes.otherBinding.checked) selectedBindings.push('Others');
+            
+            // Get selected languages
+            const selectedLanguages = [];
+            if (dealLanguageCheckboxes.english.checked) selectedLanguages.push('English');
+            if (dealLanguageCheckboxes.hindi.checked) selectedLanguages.push('Hindi');
+            if (dealLanguageCheckboxes.marathi.checked) selectedLanguages.push('Marathi');
+            if (dealLanguageCheckboxes.tamil.checked) selectedLanguages.push('Tamil');
+            if (dealLanguageCheckboxes.otherLang.checked) selectedLanguages.push('Others');
+            
+            // Filter books
+            let filteredBooks = books.filter(book => {
+                return book.todaysDeal && 
+                       book.price <= maxPrice && 
+                       book.discount >= minDiscount &&
+                       selectedBindings.includes(book.binding) &&
+                       selectedLanguages.includes(book.language);
+            });
+            
+            // Sort books
+            filteredBooks = sortBooks(filteredBooks, sortValue);
+            
+            // Update results count
+            dealResultsCount.textContent = `${filteredBooks.length} results found`;
+            
+            // Render filtered books
+            displayBooks(filteredBooks, dealGrid, true);
+        }
+
+        // Sort books based on criteria
+        function sortBooks(booksToSort, sortValue) {
+            switch(sortValue) {
+                case 'price-low':
+                    return [...booksToSort].sort((a, b) => a.price - b.price);
+                case 'price-high':
+                    return [...booksToSort].sort((a, b) => b.price - a.price);
+                case 'discount':
+                    return [...booksToSort].sort((a, b) => b.discount - a.discount);
+                case 'newest':
+                    return [...booksToSort].sort((a, b) => (b.newArrival === true) - (a.newArrival === true) || b.id - a.id);
+                default:
+                    return [...booksToSort].sort((a, b) => a.price - b.price);
+            }
+        }
+
+        // Display books in the grid
+        function displayBooks(booksToDisplay, gridElement, showDetails = false) {
+            gridElement.innerHTML = '';
+            
+            if (booksToDisplay.length === 0) {
+                gridElement.innerHTML = '<p class="no-results">No books found matching your criteria.</p>';
+                return;
+            }
+            
+            booksToDisplay.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                
+                if (showDetails) {
+                    // Detailed view for category pages
+                    bookCard.innerHTML = `
+                        <div class="book-author">${book.author}</div>
+                        <div class="book-title">${book.title}</div>
+                        <img src="${book.image}" alt="${book.title}" class="book-image" data-id="${book.id}">
+                        ${book.discount > 0 ? `<span class="discount-badge">${book.discount}% OFF</span>` : ''}
+                        <div class="book-price">
+                            <span class="current-price">₹${book.price.toLocaleString()}</span>
+                            ${book.originalPrice > book.price ? 
+                              `<span class="original-price">₹${book.originalPrice.toLocaleString()}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart" data-id="${book.id}">Add to Cart</button>
+                    `;
+                } else {
+                    // Simple view for home page
+                    bookCard.innerHTML = `
+                        <div class="book-author">${book.author}</div>
+                        <div class="book-title">${book.title}</div>
+                        <img src="${book.image}" alt="${book.title}" class="book-image" data-id="${book.id}">
+                        ${book.discount > 0 ? `<span class="discount-badge">${book.discount}% OFF</span>` : ''}
+                        <div class="book-price">
+                            <span class="current-price">₹${book.price.toLocaleString()}</span>
+                            ${book.originalPrice > book.price ? 
+                              `<span class="original-price">₹${book.originalPrice.toLocaleString()}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart" data-id="${book.id}">Add to Cart</button>
+                    `;
+                }
+                
+                gridElement.appendChild(bookCard);
+            });
+            
+            // Add click event to book images
+            document.querySelectorAll('.book-image').forEach(img => {
+                img.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-id'));
+                    showProductDetail(bookId);
+                });
+            });
+            
+            // Add click event to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const bookId = parseInt(this.getAttribute('data-id'));
+                    addToCart(bookId);
+                });
+            });
+        }
+
+        // Handle login
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                loginError.textContent = "Please enter both email and password";
+                return;
+            }
+            
+            // In a real app, you would send this to your backend
+            // For demo purposes, we'll simulate a successful login
+            simulateLogin(email, password);
+        }
+
+        // Simulate login (replace with actual API call)
+        function simulateLogin(email, password) {
+            // This would be an API call to your backend in a real app
+            // For demo, we'll just check if it's a Gmail address
+            if (email.includes("@gmail.com") && password.length >= 6) {
+                currentUser = {
+                    email: email,
+                    name: email.split('@')[0]
+                };
+                
+                loginModal.style.display = 'none';
+                loginError.textContent = '';
+                
+                // In a real app, you would store the user session/token
+                console.log("User logged in:", currentUser);
+                
+                // Here you would update the UI to show the user is logged in
+                loginLink.textContent = currentUser.name;
+            } else {
+                loginError.textContent = "Invalid email or password";
+            }
+        }
+
+        // Handle buy now
+        function handleBuyNow() {
+            if (!selectedBook) return;
+            
+            if (!currentUser) {
+                // Show login modal if user is not logged in
+                loginModal.style.display = 'flex';
+                return;
+            }
+            
+            // Create order with the selected book and quantity
+            const order = {
+                name: currentUser.name || 'Guest',
+                products: [{
+                    bookId: selectedBook.id,
+                    title: selectedBook.title,
+                    price: selectedBook.price,
+                    quantity: parseInt(quantityInput.value)
+                }],
+                total: selectedBook.price * parseInt(quantityInput.value),
+                paymentMethod: 'gpay',
+                orderDate: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            // Show order form
+            document.getElementById('name').value = currentUser.name || '';
+            document.getElementById('number').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('delivery-date').valueAsDate = new Date();
+            
+            orderForm.style.display = 'block';
+            paymentOptions.style.display = 'block';
+            selectedPaymentMethod = 'gpay';
+            document.querySelector('.payment-option[data-payment="gpay"]').classList.add('selected');
+            
+            // Scroll to the cart sidebar to show the order form
+            document.querySelector('.cart-sidebar').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Handle add to cart
+        function handleAddToCart() {
+            if (!selectedBook) return;
+            
+            const quantity = parseInt(quantityInput.value);
+            addToCart(selectedBook.id, quantity);
+        }
+
+        // Add to cart function
+        function addToCart(bookId, quantity = 1) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            if (!currentUser) {
+                // Show login modal if user is not logged in
+                loginModal.style.display = 'flex';
+                return;
+            }
+            
+            // Add to cart
+            const existingItem = cartItems.find(item => item.bookId === bookId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cartItems.push({
+                    bookId: bookId,
+                    quantity: quantity,
+                    book: book
+                });
+            }
+            
+            updateCartDisplay();
+            updateCartCount();
+            alert(`${quantity} ${quantity > 1 ? 'copies' : 'copy'} of "${book.title}" added to cart!`);
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            cartItemsEl.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsEl.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-book-open"></i>
+                        <p>Your cart is empty</p>
+                        <p>Start shopping to add items</p>
+                    </div>
+                `;
+                cartTotalEl.style.display = 'none';
+                checkoutBtn.style.display = 'none';
+                orderForm.style.display = 'none';
+            } else {
+                cartTotalEl.style.display = 'block';
+                checkoutBtn.style.display = 'block';
+                
+                cartItems.forEach(item => {
+                    const cartItemEl = document.createElement('div');
+                    cartItemEl.className = 'cart-item';
+                    cartItemEl.innerHTML = `
+                        <div class="cart-item-info">
+                            <img src="${item.book.image}" alt="${item.book.title}" class="cart-item-image">
+                            <div class="cart-item-details">
+                                <div class="cart-item-title">${item.book.title}</div>
+                                <div class="cart-item-author">by ${item.book.author}</div>
+                                <div class="cart-item-price">₹${item.book.price.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button class="decrease-qty" data-id="${item.bookId}">-</button>
+                            <input type="number" value="${item.quantity}" min="1" class="qty-input" data-id="${item.bookId}">
+                            <button class="increase-qty" data-id="${item.bookId}">+</button>
+                            <span class="cart-item-remove" data-id="${item.bookId}">&times;</span>
+                        </div>
+                    `;
+                    cartItemsEl.appendChild(cartItemEl);
+                });
+                
+                // Add event listeners to quantity controls in cart
+                document.querySelectorAll('.decrease-qty').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookId = parseInt(this.getAttribute('data-id'));
+                        updateCartItemQuantity(bookId, -1);
+                    });
+                });
+                
+                document.querySelectorAll('.increase-qty').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookId = parseInt(this.getAttribute('data-id'));
+                        updateCartItemQuantity(bookId, 1);
+                    });
+                });
+                
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const bookId = parseInt(this.getAttribute('data-id'));
+                        const newQuantity = parseInt(this.value);
+                        if (newQuantity > 0) {
+                            updateCartItemQuantity(bookId, 0, newQuantity);
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookId = parseInt(this.getAttribute('data-id'));
+                        removeFromCart(bookId);
+                    });
+                });
+                
+                const total = cartItems.reduce((sum, item) => sum + (item.book.price * item.quantity), 0);
+                cartTotalEl.textContent = `Total: ₹${total.toLocaleString()}`;
+            }
+        }
+
+        // Update cart item quantity
+        function updateCartItemQuantity(bookId, change, newQuantity = null) {
+            const item = cartItems.find(item => item.bookId === bookId);
+            if (!item) return;
+            
+            if (newQuantity !== null) {
+                item.quantity = newQuantity;
+            } else {
+                item.quantity += change;
+            }
+            
+            // Remove if quantity is 0 or less
+            if (item.quantity <= 0) {
+                cartItems = cartItems.filter(item => item.bookId !== bookId);
+            }
+            
+            updateCartDisplay();
+            updateCartCount();
+        }
+
+        // Remove from cart
+        function removeFromCart(bookId) {
+            cartItems = cartItems.filter(item => item.bookId !== bookId);
+            updateCartDisplay();
+            updateCartCount();
+        }
+
+        // Update cart count in header
+        function updateCartCount() {
+            const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = count;
+            
+            if (count > 0) {
+                cartCount.style.display = 'flex';
+            } else {
+                cartCount.style.display = 'none';
+            }
+        }
+
+        // Submit order
+        async function submitOrder(e) {
+            e.preventDefault();
+            
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            const name = document.getElementById('name').value;
+            const number = document.getElementById('number').value;
+            const location = document.getElementById('location').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            
+            if (!name || !number || !location || !deliveryDate) {
+                alert('Please fill all the fields');
+                return;
+            }
+            
+            // Prepare order data
+            const order = {
+                name,
+                number,
+                location,
+                deliveryDate,
+                paymentMethod: selectedPaymentMethod,
+                products: cartItems.length > 0 ? 
+                    cartItems.map(item => ({
+                        bookId: item.bookId,
+                        title: item.book.title,
+                        price: item.book.price,
+                        quantity: item.quantity
+                    })) : 
+                    [{
+                        bookId: selectedBook.id,
+                        title: selectedBook.title,
+                        price: selectedBook.price,
+                        quantity: parseInt(quantityInput.value)
+                    }],
+                total: cartItems.length > 0 ? 
+                    cartItems.reduce((sum, item) => sum + (item.book.price * item.quantity), 0) :
+                    selectedBook.price * parseInt(quantityInput.value),
+                orderDate: new Date().toISOString(),
+                userId: currentUser ? currentUser.email : 'guest',
+                status: 'pending'
+            };
+            
+            try {
+                // In a real app, you would send the order to your backend
+                // For demo, we'll just simulate it
+                const response = await simulateOrderSubmission(order);
+                
+                if (response.success) {
+                    if (selectedPaymentMethod === 'gpay') {
+                        // Simulate GPay payment
+                        paymentModal.style.display = 'flex';
+                        
+                        setTimeout(() => {
+                            paymentModal.style.display = 'none';
+                            showOrderConfirmation(response.orderId);
+                        }, 2000);
+                    } else {
+                        // Cash on delivery
+                        showOrderConfirmation(response.orderId);
+                    }
+                } else {
+                    alert('Error placing order: ' + response.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error placing order. Please try again.');
+            }
+        }
+
+        // Simulate order submission (replace with actual API call)
+        function simulateOrderSubmission(order) {
+            // In a real app, this would call your backend API
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve({
+                        success: true,
+                        orderId: 'ORD' + Math.random().toString(36).substr(2, 8).toUpperCase()
+                    });
+                }, 1000);
+            });
+        }
+
+        // Show order confirmation
+        function showOrderConfirmation(orderId) {
+            // Hide all other pages
+            hideAllPages();
+            
+            // Remove existing pages if any
+            const existingOrderPage = document.getElementById('order-page');
+            if (existingOrderPage) existingOrderPage.remove();
+            const existingPaymentPage = document.getElementById('payment-page');
+            if (existingPaymentPage) existingPaymentPage.remove();
+            
+            // Create confirmation page
+            const confirmationPage = document.createElement('div');
+            confirmationPage.id = 'confirmation-page';
+            confirmationPage.innerHTML = `
+                <div class="confirmation-container">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1>Order Confirmed!</h1>
+                    <p>Your order #${orderId} has been placed successfully.</p>
+                    <p>We'll send you a confirmation email shortly.</p>
+                    <button id="continue-shopping" class="continue-btn">Continue Shopping</button>
+                </div>
+            `;
+            
+            document.querySelector('.container').appendChild(confirmationPage);
+            
+            // Handle continue shopping
+            document.getElementById('continue-shopping').addEventListener('click', function() {
+                // Clear cart after successful order
+                cartItems = [];
+                updateCartDisplay();
+                updateCartCount();
+                orderForm.style.display = 'none';
+                checkoutForm.reset();
+                showHomePage();
+            });
+        }
+
+        // Hide all pages
+        function hideAllPages() {
+            homePage.style.display = 'none';
+            bestSellersPage.style.display = 'none';
+            newArrivalsPage.style.display = 'none';
+            boxSetsPage.style.display = 'none';
+            fictionBooksPage.style.display = 'none';
+            awardWinnersPage.style.display = 'none';
+            featuredAuthorsPage.style.display = 'none';
+            todaysDealPage.style.display = 'none';
+            productDetailPage.style.display = 'none';
+        }
+        // Modify the submitOrder function in your existing code
+// Submit order
+async function submitOrder(e) {
+    e.preventDefault();
+    
+    if (!selectedPaymentMethod) {
+        alert('Please select a payment method');
+        return;
+    }
+    
+    const name = document.getElementById('name').value;
+    const number = document.getElementById('number').value;
+    const location = document.getElementById('location').value;
+    const deliveryDate = document.getElementById('delivery-date').value;
+    
+    if (!name || !number || !location || !deliveryDate) {
+        alert('Please fill all the fields');
+        return;
+    }
+    
+    // Prepare order data
+    const order = {
+        name,
+        number,
+        location,
+        deliveryDate,
+        paymentMethod: selectedPaymentMethod,
+        products: cartItems.length > 0 ? 
+            cartItems.map(item => ({
+                bookId: item.bookId,
+                title: item.book.title,
+                price: item.book.price,
+                quantity: item.quantity
+            })) : 
+            [{
+                bookId: selectedBook.id,
+                title: selectedBook.title,
+                price: selectedBook.price,
+                quantity: parseInt(quantityInput.value)
+            }],
+        total: cartItems.length > 0 ? 
+            cartItems.reduce((sum, item) => sum + (item.book.price * item.quantity), 0) :
+            selectedBook.price * parseInt(quantityInput.value),
+        userId: currentUser ? currentUser.email : 'guest',
+        status: 'pending'
+    };
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            if (selectedPaymentMethod === 'gpay') {
+                // Simulate GPay payment
+                paymentModal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    paymentModal.style.display = 'none';
+                    showOrderConfirmation(data.orderId);
+                }, 2000);
+            } else {
+                // Cash on delivery
+                showOrderConfirmation(data.orderId);
+            }
+            
+            // Clear the cart after successful order
+            cartItems = [];
+            updateCartDisplay();
+            updateCartCount();
+        } else {
+            alert('Error placing order: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error placing order. Please try again.');
+    }
+}
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>
